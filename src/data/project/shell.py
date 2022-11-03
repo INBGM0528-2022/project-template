@@ -97,16 +97,17 @@ def main() -> None:
         match tokens:
             case ["exit"]:
                 connection.close()
+                break
             case ["help"]:
                 print(help_message())
             case ["generate", _, _, _, _]:
                 dataset = dataset_type.generate(int(tokens[1]), int(tokens[2]), int(tokens[3]), int(tokens[4]))
-            case ["write", ("csv", "xlsx", "json"), _]:
-                writers[tokens[1]](tokens)
+            case ["write", ("csv" | "xlsx" | "json") as doc_type, _]:
+                writers[doc_type](tokens)
             case ["write", "sql"]:
                 writers[tokens[1]](tokens)
-            case ["read", ("csv", "xlsx", "json", "sql"), _]:
-                dataset = readers[tokens[1]](tokens)
+            case ["read", ("csv" | "xlsx" | "json" | "sql") as doc_type, _]:
+                dataset = readers[doc_type](tokens)
             case [*o]:
                 print("unknown command", file=sys.stderr)
 
